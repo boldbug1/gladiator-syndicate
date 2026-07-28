@@ -40,9 +40,12 @@ func handle_movement(delta: float) -> void:
 		velocity.x = move_toward(velocity.x, 0, friction * delta)
 
 func update_animation() -> void:
-	var moving := absf(velocity.x) > 10.0
+	if not is_on_floor():
+		sprite.play("jump")
+		return
 
-	if moving and is_on_floor():
+	var moving := absf(velocity.x) > 10.0
+	if moving:
 		sprite.flip_h = velocity.x < 0
 		if Input.is_action_pressed("ui_shift"):
 			sprite.play("run")
