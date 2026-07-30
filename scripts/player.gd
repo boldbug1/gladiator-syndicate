@@ -163,8 +163,8 @@ func hit_enemies() -> void:
 			var dist = global_position.distance_to(enemy.global_position)
 			var in_front = (facing_dir > 0 and enemy.global_position.x > global_position.x) or (facing_dir < 0 and enemy.global_position.x < global_position.x)
 			if dist < ATTACK_RANGE and in_front:
-				var knockback = Vector2(facing_dir * 300, -150)
-				enemy.take_damage(25, knockback)
+				var knockback_dir = Vector2(facing_dir, -0.5).normalized()
+				enemy.take_damage(25, knockback_dir)
 				print("[PLAYER] Hit enemy!")
 
 func take_damage(dmg: int, knockback_dir: Vector2 = Vector2.ZERO) -> void:
