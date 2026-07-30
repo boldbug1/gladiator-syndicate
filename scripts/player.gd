@@ -1,6 +1,6 @@
 extends CharacterBody2D
 
-enum State { IDLE, MOVE, JUMP, ATTACK, DEFEND, HURT }
+enum State { IDLE, MOVE, JUMP, ATTACK, DEFEND, HURT, DEATH }
 
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 
@@ -27,7 +27,9 @@ const COYOTE_TIME := 0.08
 var coyote_timer: float = 0.0
 
 # --- ATTACK ---
-const ATTACK_LUNGE := 200.0 
+const ATTACK_LUNGE := 200.0
+const ATTACK_RANGE := 45.0
+var attack_connected: bool = false
 
 # --- DEFEND ---
 var is_defending: bool = false
@@ -36,11 +38,17 @@ var is_defending: bool = false
 var health: int = 100
 var max_health: int = 100
 
+# --- RESPAWN ---
+var spawn_position: Vector2 = Vector2(267, 232)
+
 func _ready() -> void:
 	sprite.animation_finished.connect(_on_animation_finished)
 	add_to_group("player")
 
 func _physics_process(delta: float) -> void:
+	if state == State.DEATH:
+		return
+
 	if combo_timer > 0:
 		combo_timer -= delta
 
@@ -99,19 +107,22 @@ func update_state() -> void:
 	# Defend
 	is_defending = Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT)
 	if is_defending and is_on_floor():
-		state = State.DEFEND
-		sprite.play("defend")
+		if state != State.DEFEND:
+			state = State.DEFEND
+			sprite.play("defend")
 		return
 
 	# Attack input - combo
 	if Input.is_action_just_pressed("ui_attack_1"):
 		state = State.ATTACK
+		attack_connected = false
 		combo_timer = COMBO_WINDOW
 		
 		if not is_on_floor():
 			sprite.play("attack_3")
 			velocity.x = facing_dir * ATTACK_LUNGE * 1.2
 			combo_step = 0
+			hit_enemies()
 			return
 			
 		velocity.x = facing_dir * ATTACK_LUNGE
@@ -126,6 +137,7 @@ func update_state() -> void:
 				sprite.play("attack_3")
 				velocity.x = facing_dir * (ATTACK_LUNGE * 1.5)
 				combo_step = 0
+		hit_enemies()
 		return
 
 	# Air state
@@ -145,7 +157,20 @@ func update_state() -> void:
 		state = State.IDLE
 		sprite.play("idle")
 
+func hit_enemies() -> void:
+	for enemy in get_tree().get_nodes_in_group("enemy"):
+		if enemy.has_method("take_damage"):
+			var dist = global_position.distance_to(enemy.global_position)
+			var in_front = (facing_dir > 0 and enemy.global_position.x > global_position.x) or (facing_dir < 0 and enemy.global_position.x < global_position.x)
+			if dist < ATTACK_RANGE and in_front:
+				var knockback = Vector2(facing_dir * 300, -150)
+				enemy.take_damage(25, knockback)
+				print("[PLAYER] Hit enemy!")
+
 func take_damage(dmg: int, knockback_dir: Vector2 = Vector2.ZERO) -> void:
+	if state == State.DEATH:
+		return
+
 	if is_defending:
 		state = State.HURT
 		sprite.play("defend_hit")
@@ -159,8 +184,21 @@ func take_damage(dmg: int, knockback_dir: Vector2 = Vector2.ZERO) -> void:
 	velocity += knockback_dir * 200
 
 	if health <= 0:
-		print("[PLAYER] Defeated!")
-		queue_free()
+		die()
+
+func die() -> void:
+	state = State.DEATH
+	velocity = Vector2.ZERO
+	sprite.play("death")
+	print("[PLAYER] Defeated! Respawning soon...")
+
+func respawn() -> void:
+	health = max_health
+	state = State.IDLE
+	global_position = spawn_position
+	velocity = Vector2.ZERO
+	sprite.play("idle")
+	print("[PLAYER] Respawned at spawn point")
 
 func _on_animation_finished() -> void:
 	match state:
@@ -168,8 +206,8 @@ func _on_animation_finished() -> void:
 			state = State.IDLE
 			sprite.play("idle")
 		State.DEFEND:
-			if is_defending:
-				sprite.play("defend")
-			else:
+			if not is_defending:
 				state = State.IDLE
 				sprite.play("idle")
+		State.DEATH:
+			respawn()

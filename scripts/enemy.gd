@@ -1,6 +1,6 @@
 extends CharacterBody2D
 
-enum State { IDLE, FOLLOW, ATTACK, HURT }
+enum State { IDLE, FOLLOW, ATTACK, HURT, DEATH }
 
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var player: CharacterBody2D = null
@@ -11,6 +11,7 @@ var health: int = 50
 var max_health: int = 50
 var attack_cooldown: float = 0.0
 var attack_index: int = 0
+var dying: bool = false
 
 const FOLLOW_RADIUS: float = 300.0
 const ATTACK_RADIUS: float = 35.0
@@ -24,8 +25,12 @@ const DAMAGE: int = 10
 
 func _ready() -> void:
 	sprite.animation_finished.connect(_on_animation_finished)
+	add_to_group("enemy")
 
 func _physics_process(delta: float) -> void:
+	if dying:
+		return
+
 	if not player:
 		player = get_tree().get_first_node_in_group("player")
 		if not player:
@@ -46,11 +51,13 @@ func _physics_process(delta: float) -> void:
 			handle_attack(delta)
 		State.HURT:
 			handle_hurt(delta)
+		State.DEATH:
+			return
 
 	move_and_slide()
 
 	if state != prev_state:
-		var names = ["IDLE", "FOLLOW", "ATTACK", "HURT"]
+		var names = ["IDLE", "FOLLOW", "ATTACK", "HURT", "DEATH"]
 		print("[ENEMY] %s → %s | HP: %d/%d" % [names[prev_state], names[state], health, max_health])
 		prev_state = state
 
@@ -88,28 +95,34 @@ func enter_attack() -> void:
 		attack_index = 0
 	attack_cooldown = ATTACK_RATE
 
-	# Apply damage to player if not defending
-	if player.has_method("take_damage"):
+	if player and player.has_method("take_damage"):
 		player.take_damage(DAMAGE, global_position.direction_to(player.global_position))
 		print("[ENEMY] Dealt %d damage to player" % DAMAGE)
 
 func handle_attack(_delta: float) -> void:
 	velocity.x = move_toward(velocity.x, 0, FRICTION * _delta)
-	# Wait for animation_finished to change state
 
 func handle_hurt(delta: float) -> void:
 	velocity.x = move_toward(velocity.x, 0, FRICTION * delta)
 
-func take_damage(dmg: int) -> void:
+func take_damage(dmg: int, knockback_dir: Vector2 = Vector2.ZERO) -> void:
+	if dying:
+		return
+
 	health -= dmg
+	print("[ENEMY] Damaged! HP: %d/%d (damage: %d)" % [health, max_health, dmg])
 
 	if health <= 0:
-		print("[ENEMY] Defeated! (HP: 0/%d)" % max_health)
-		queue_free()
+		dying = true
+		state = State.DEATH
+		velocity = Vector2.ZERO
+		sprite.play("death")
+		print("[ENEMY] Defeated! Playing death animation")
 		return
 
 	state = State.HURT
 	sprite.play("hurt")
+	velocity += knockback_dir * 300
 
 func _on_animation_finished() -> void:
 	match state:
@@ -125,3 +138,5 @@ func _on_animation_finished() -> void:
 				state = State.FOLLOW
 			else:
 				state = State.IDLE
+		State.DEATH:
+			queue_free()

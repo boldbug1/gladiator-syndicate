@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://b18e00liciuuc"]
 
-[ext_resource type="Script" path="res://scripts/enemy.gd" id="0_script"]
+[ext_resource type="Script" uid="uid://d2t1l58tblxab" path="res://scripts/enemy.gd" id="0_script"]
 [ext_resource type="Texture2D" uid="uid://dg6r3gu0t7tv4" path="res://assets/enemy/Pixel_DarkNinja_32px/frames/Attack2/01.png" id="1_5ie7m"]
 [ext_resource type="Texture2D" uid="uid://cxho2gq4viema" path="res://assets/enemy/Pixel_DarkNinja_32px/frames/Attack2/02.png" id="2_ya47j"]
 [ext_resource type="Texture2D" uid="uid://bg8glndawsi1d" path="res://assets/enemy/Pixel_DarkNinja_32px/frames/Attack2/03.png" id="3_hyejq"]
@@ -44,6 +44,22 @@
 [ext_resource type="Texture2D" uid="uid://bvqx70i7bcuod" path="res://assets/enemy/Pixel_DarkNinja_32px/frames/Move/06.png" id="41_2drwo"]
 [ext_resource type="Texture2D" uid="uid://842sg64su2mu" path="res://assets/enemy/Pixel_DarkNinja_32px/frames/Move/07.png" id="42_ldkvj"]
 [ext_resource type="Texture2D" uid="uid://gb4fr0ru7ki3" path="res://assets/enemy/Pixel_DarkNinja_32px/frames/Move/08.png" id="43_y1ofb"]
+[ext_resource type="Texture2D" uid="uid://bxycvwj5ytcum" path="res://assets/enemy/Pixel_DarkNinja_32px/frames/Teleport1/01.png" id="44"]
+[ext_resource type="Texture2D" uid="uid://b7pefes838omi" path="res://assets/enemy/Pixel_DarkNinja_32px/frames/Teleport1/02.png" id="45"]
+[ext_resource type="Texture2D" uid="uid://7nweifdnbk2m" path="res://assets/enemy/Pixel_DarkNinja_32px/frames/Teleport1/03.png" id="46"]
+[ext_resource type="Texture2D" uid="uid://ccfat1ugijl54" path="res://assets/enemy/Pixel_DarkNinja_32px/frames/Teleport1/04.png" id="47"]
+[ext_resource type="Texture2D" uid="uid://cprvdmdajtjrg" path="res://assets/enemy/Pixel_DarkNinja_32px/frames/Teleport1/05.png" id="48"]
+[ext_resource type="Texture2D" uid="uid://mf5d6kbxiehx" path="res://assets/enemy/Pixel_DarkNinja_32px/frames/Teleport1/06.png" id="49"]
+[ext_resource type="Texture2D" uid="uid://b1iqfywvqu1fk" path="res://assets/enemy/Pixel_DarkNinja_32px/frames/Teleport1/07.png" id="50"]
+[ext_resource type="Texture2D" uid="uid://cn4wgmskq1l5q" path="res://assets/enemy/Pixel_DarkNinja_32px/frames/Teleport1/08.png" id="51"]
+[ext_resource type="Texture2D" uid="uid://dsmpp2tlug6tt" path="res://assets/enemy/Pixel_DarkNinja_32px/frames/Teleport1/09.png" id="52"]
+[ext_resource type="Texture2D" uid="uid://du74sedaneq6l" path="res://assets/enemy/Pixel_DarkNinja_32px/frames/Teleport1/10.png" id="53"]
+[ext_resource type="Texture2D" uid="uid://gp5n6ma36xxo" path="res://assets/enemy/Pixel_DarkNinja_32px/frames/Teleport1/11.png" id="54"]
+[ext_resource type="Texture2D" uid="uid://d3ea055wpvx8f" path="res://assets/enemy/Pixel_DarkNinja_32px/frames/Teleport1/12.png" id="55"]
+[ext_resource type="Texture2D" uid="uid://c6tnmj05nqxwl" path="res://assets/enemy/Pixel_DarkNinja_32px/frames/Teleport1/13.png" id="56"]
+[ext_resource type="Texture2D" uid="uid://bejusc1nqb36n" path="res://assets/enemy/Pixel_DarkNinja_32px/frames/Teleport1/14.png" id="57"]
+[ext_resource type="Texture2D" uid="uid://b3s6qrfih558i" path="res://assets/enemy/Pixel_DarkNinja_32px/frames/Teleport1/15.png" id="58"]
+[ext_resource type="Texture2D" uid="uid://bdkbkl5mqebf0" path="res://assets/enemy/Pixel_DarkNinja_32px/frames/Teleport1/16.png" id="59"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_5nnh8"]
 animations = [{
@@ -205,10 +221,63 @@ animations = [{
 "loop": 1,
 "name": &"run",
 "speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("44")
+}, {
+"duration": 1.0,
+"texture": ExtResource("45")
+}, {
+"duration": 1.0,
+"texture": ExtResource("46")
+}, {
+"duration": 1.0,
+"texture": ExtResource("47")
+}, {
+"duration": 1.0,
+"texture": ExtResource("48")
+}, {
+"duration": 1.0,
+"texture": ExtResource("49")
+}, {
+"duration": 1.0,
+"texture": ExtResource("50")
+}, {
+"duration": 1.0,
+"texture": ExtResource("51")
+}, {
+"duration": 1.0,
+"texture": ExtResource("52")
+}, {
+"duration": 1.0,
+"texture": ExtResource("53")
+}, {
+"duration": 1.0,
+"texture": ExtResource("54")
+}, {
+"duration": 1.0,
+"texture": ExtResource("55")
+}, {
+"duration": 1.0,
+"texture": ExtResource("56")
+}, {
+"duration": 1.0,
+"texture": ExtResource("57")
+}, {
+"duration": 1.0,
+"texture": ExtResource("58")
+}, {
+"duration": 1.0,
+"texture": ExtResource("59")
+}],
+"loop": 0,
+"name": &"death",
+"speed": 10.0
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_enemy"]
-size = Vector2(24, 40)
+size = Vector2(16, 33)
 
 [node name="Enemy" type="CharacterBody2D" unique_id=1221289893]
 script = ExtResource("0_script")
@@ -218,4 +287,5 @@ sprite_frames = SubResource("SpriteFrames_5nnh8")
 animation = &"idle"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2016151141]
+position = Vector2(-9, 6)
 shape = SubResource("RectangleShape2D_enemy")

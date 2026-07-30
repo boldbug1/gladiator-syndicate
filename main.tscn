@@ -3,12 +3,16 @@
 [ext_resource type="PackedScene" uid="uid://dbdu41nsnrir" path="res://scenes/player.tscn" id="1_0xm2m"]
 [ext_resource type="PackedScene" uid="uid://drls25rowhgp8" path="res://scenes/platform.tscn" id="2_h2yge"]
 [ext_resource type="PackedScene" uid="uid://pause12345" path="res://scenes/pause_menu.tscn" id="3_pause"]
+[ext_resource type="PackedScene" uid="uid://b18e00liciuuc" path="res://scenes/enemy.tscn" id="4_1bvp3"]
 
 [node name="main" type="Node2D" unique_id=826591470]
-
 
 [node name="player" parent="." unique_id=1916646383 instance=ExtResource("1_0xm2m")]
 
 [node name="Node2D" parent="." unique_id=1228582172 instance=ExtResource("2_h2yge")]
 
-[node name="PauseMenu" parent="." instance=ExtResource("3_pause")]
+[node name="PauseMenu" parent="." unique_id=2143339430 instance=ExtResource("3_pause")]
+
+[node name="Enemy" parent="." unique_id=1221289893 instance=ExtResource("4_1bvp3")]
+z_index = 1
+position = Vector2(1231, 498)
