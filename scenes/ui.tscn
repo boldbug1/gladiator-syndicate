@@ -1,3 +1,146 @@
-[gd_scene format=3 uid="uid://ja8m6scgw6m5"]
+[gd_scene load_steps=9 format=3 uid="uid://ja8m6scgw6m5"]
 
-[node name="Node2D" type="Node" unique_id=108253412]
+[ext_resource type="Script" path="res://scripts/ui.gd" id="1_ui_script"]
+[ext_resource type="FontFile" path="res://assets/PressStart2P.ttf" id="2_font"]
+[ext_resource type="Texture2D" path="res://assets/gladiator_logo.png" id="3_logo"]
+[ext_resource type="VideoStream" path="res://assets/background_video.ogv" id="4_video"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_normal"]
+bg_color = Color(0.07, 0.07, 0.07, 1)
+border_width_left = 6
+border_width_top = 6
+border_width_right = 6
+border_width_bottom = 6
+border_color = Color(0.85, 0.2, 0.15, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+expand_margin_left = 16.0
+expand_margin_top = 8.0
+expand_margin_right = 16.0
+expand_margin_bottom = 8.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hover"]
+bg_color = Color(0.15, 0.15, 0.15, 1)
+border_width_left = 6
+border_width_top = 6
+border_width_right = 6
+border_width_bottom = 6
+border_color = Color(1, 0.3, 0.25, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+expand_margin_left = 16.0
+expand_margin_top = 8.0
+expand_margin_right = 16.0
+expand_margin_bottom = 8.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pressed"]
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 6
+border_width_top = 6
+border_width_right = 6
+border_width_bottom = 6
+border_color = Color(0.6, 0.1, 0.1, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+expand_margin_left = 16.0
+expand_margin_top = 8.0
+expand_margin_right = 16.0
+expand_margin_bottom = 8.0
+
+[sub_resource type="Theme" id="Theme_ui"]
+default_font = ExtResource("2_font")
+Button/colors/font_color = Color(1, 1, 1, 1)
+Button/colors/font_hover_color = Color(1, 1, 1, 1)
+Button/font_sizes/font_size = 24
+Button/styles/hover = SubResource("StyleBoxFlat_hover")
+Button/styles/normal = SubResource("StyleBoxFlat_normal")
+Button/styles/pressed = SubResource("StyleBoxFlat_pressed")
+Label/font_sizes/font_size = 54
+
+[node name="UI" type="CanvasLayer"]
+script = ExtResource("1_ui_script")
+
+[node name="MainMenu" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("Theme_ui")
+
+[node name="BackgroundVideo" type="VideoStreamPlayer" parent="MainMenu"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -80.0
+offset_top = -80.0
+offset_right = 80.0
+offset_bottom = 80.0
+grow_horizontal = 2
+grow_vertical = 2
+stream = ExtResource("4_video")
+autoplay = true
+expand = true
+loop = true
+
+[node name="Overlay" type="ColorRect" parent="MainMenu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.02, 0.02, 0.04, 0.45)
+
+[node name="Logo" type="TextureRect" parent="MainMenu"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -450.0
+offset_top = 20.0
+offset_right = 450.0
+offset_bottom = 350.0
+grow_horizontal = 2
+texture = ExtResource("3_logo")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ButtonContainer" type="VBoxContainer" parent="MainMenu"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -160.0
+offset_top = 40.0
+offset_right = 160.0
+offset_bottom = 280.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 30
+
+[node name="PlayButton" type="Button" parent="MainMenu/ButtonContainer"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+text = "+ PLAY +"
+
+[node name="SettingsButton" type="Button" parent="MainMenu/ButtonContainer"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+text = "SETTINGS"
+
+[node name="HelpButton" type="Button" parent="MainMenu/ButtonContainer"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+text = "HELP"
